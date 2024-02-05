@@ -4,6 +4,7 @@ import { AwsDatabase } from './database';
 import { AwsMicroservices } from './microservice';
 import { AwsApiGateway } from './apigateway';
 import { AwsEventBus } from './eventbus';
+import { AwsQueue } from './queue';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsEcommerceServicesStack extends cdk.Stack {
@@ -25,9 +26,11 @@ export class AwsEcommerceServicesStack extends cdk.Stack {
       orderingMicroservices: microservices.orderingMicroservice 
     });
 
+    const queue = new AwsQueue(this, 'AwsQueue', { consumer: microservices.orderingMicroservice });
+
     const eventBus = new AwsEventBus(this, 'AwsEventBus', {
       publisherFunction: microservices.basketMicroservice,
-      targetFunction: microservices.orderingMicroservice
+      targetQueue: queue.orderQueue
     });
   }
 }
