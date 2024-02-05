@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import { AwsDatabase } from './database';
 import { AwsMicroservices } from './microservice';
 import { AwsApiGateway } from './apigateway';
+import { AwsEventBus } from './eventbus';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsEcommerceServicesStack extends cdk.Stack {
@@ -13,13 +14,20 @@ export class AwsEcommerceServicesStack extends cdk.Stack {
     const productTable = database.productTable;
     const microservices = new AwsMicroservices(this, 'AwsMicroservices', { 
       productTable: database.productTable, 
-      basketTable: database.basketTable 
+      basketTable: database.basketTable,
+      orderTable: database.orderTable 
     });
     const productFunction = microservices.productMicroService;
 
     const apigw = new AwsApiGateway(this, 'AwsApiGateway', { 
       productMicroservice: microservices.productMicroService, 
-      basketMicroservice: microservices.basketMicroservice 
+      basketMicroservice: microservices.basketMicroservice,
+      orderingMicroservices: microservices.orderingMicroservice 
+    });
+
+    const eventBus = new AwsEventBus(this, 'AwsEventBus', {
+      publisherFunction: microservices.basketMicroservice,
+      targetFunction: microservices.orderingMicroservice
     });
   }
 }

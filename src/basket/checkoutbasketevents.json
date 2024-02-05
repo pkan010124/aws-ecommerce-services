@@ -1,0 +1,61 @@
+[
+  {
+    "Source": "com.aws.basket.checkoutbasket",
+    "Detail": "{ \"username\": \"aws\", \"basket\": \"phone1\" }",
+    "Resources": [
+      "resource1",
+      "resource2"
+    ],
+    "DetailType": "CheckoutBasket",
+    "EventBusName": "AwsEventBus"
+  },
+  {
+    "Source": "com.aws.basket.checkoutbasket",
+    "Detail": "{ \"username\": \"aws\", \"basket\": \"phone2\" }",
+    "Resources": [
+      "resource1",
+      "resource2"
+    ],
+    "DetailType": "CheckoutBasket",
+    "EventBusName": "AwsEventBus"
+  }
+]
+
+[
+  {
+    "version": "0",
+    "id": "be75c7ac-1014-9afe-5763-b1edc8652e35",
+    "detail-type": "CheckoutBasket",
+    "source": "com.aws.basket.checkoutbasket",
+    "account": "626481498895",
+    "time": "2024-02-04T18:24:29Z",
+    "region": "us-east-1",
+    "resources": [],
+    "detail": {
+        "userName": "aws",
+        "totalPrice": 1820,
+        "firstName": "pk",
+        "lastName": "fiddler11",
+        "email": "pkfiddler11@gmail.com",
+        "address": "columbus",
+        "cardInfo": "5554443322",
+        "paymentMethod": 1,
+        "items": [
+            {
+                "quantity": 2,
+                "color": "Red",
+                "productId": "a44f2d76-0b55-4cdc-a8f8-6b7dc0a2392e",
+                "price": 950,
+                "productName": "IPhone X"
+            },
+            {
+                "quantity": 1,
+                "color": "Blue",
+                "productId": "80c85dfc-193e-4170-8808-13d0bc46aa63",
+                "price": 870,
+                "productName": "Samsung 10"
+            }
+        ]
+    }
+}
+]

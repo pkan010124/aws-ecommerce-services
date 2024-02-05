@@ -4,7 +4,8 @@ import { Construct } from "constructs";
 
 interface AwsApiGatewayProps {
   productMicroservice: IFunction,
-  basketMicroservice: IFunction  
+  basketMicroservice: IFunction,
+  orderingMicroservices: IFunction
 }
 
 export class AwsApiGateway extends Construct {
@@ -15,7 +16,35 @@ export class AwsApiGateway extends Construct {
     this.createProductApi(props.productMicroservice);
     // Basket api gateway
     this.createBasketApi(props.basketMicroservice);
-}
+    // Order api gateway
+    this.createOrderApi(props.orderingMicroservices);
+  }
+
+  createOrderApi(orderingMicroservices: IFunction) {
+    // Ordering microservices api gateway
+    // root name = order
+
+    // GET /order
+    // GET /order/{userName}
+    // expected request : xxx/order/aws?orderDate=timestamp
+    // ordering ms grap input and query parameters and filter to dynamo db
+
+    const apigw = new LambdaRestApi(this, 'orderApi', {
+      restApiName: 'Order Service',
+      handler: orderingMicroservices,
+      proxy: false
+    });
+
+    const order = apigw.root.addResource('order');
+    order.addMethod('GET');  // GET /order        
+
+    const singleOrder = order.addResource('{userName}');
+    singleOrder.addMethod('GET');  // GET /order/{userName}
+    // expected request : xxx/order/aws?orderDate=timestamp
+    // ordering ms grap input and query parameters and filter to dynamo db
+
+    return singleOrder;
+  }
 
   private createProductApi(productMicroservice: IFunction) {
     // Product microservices api gateway
@@ -38,7 +67,7 @@ export class AwsApiGateway extends Construct {
     const product = apigw.root.addResource('product');
     product.addMethod('GET'); // GET /product
     product.addMethod('POST');  // POST /product
-    
+
     const singleProduct = product.addResource('{id}'); // product/{id}
     singleProduct.addMethod('GET'); // GET /product/{id}
     singleProduct.addMethod('PUT'); // PUT /product/{id}
@@ -61,9 +90,9 @@ export class AwsApiGateway extends Construct {
     // POST /basket/checkout
 
     const apigw = new LambdaRestApi(this, 'basketApi', {
-        restApiName: 'Basket Service',
-        handler: basketMicroservice,
-        proxy: false
+      restApiName: 'Basket Service',
+      handler: basketMicroservice,
+      proxy: false
     });
 
     const basket = apigw.root.addResource('basket');
@@ -76,6 +105,6 @@ export class AwsApiGateway extends Construct {
 
     const basketCheckout = basket.addResource('checkout');
     basketCheckout.addMethod('POST'); // POST /basket/checkout
-        // expected request payload : { userName : swn }
-}
+    // expected request payload : { userName : aws }
+  }
 }
